@@ -118,3 +118,4 @@ deactivate
 4. Wait for Day 2 - Functions & Loops
 
 Happy Learning! 🐍
+# my-ai-learning
