@@ -64,9 +64,9 @@ Think of it like a PHP array of objects, but 1000x more powerful!
 # 3. LOADING DATA INTO PANDAS
 # ==========================================
 
-print("\n" + "=" * 70)
+print("\n" + "=" * 80)
 print("3. LOAD CSV INTO DATAFRAME")
-print("=" * 70)
+print("=" * 80)
 
 # Read CSV into DataFrame
 df = pd.read_csv(csv_file)
