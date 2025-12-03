@@ -280,24 +280,82 @@ HINTS:
 """)
 
 # ==========================================
-# BONUS: Quick Comparison with PHP
+# COMPARISON: DataFrames vs Laravel Collections
 # ==========================================
 
 print("\n\n" + "=" * 70)
-print("BONUS: Pandas vs PHP")
+print("🔄 LARAVEL ELOQUENT vs PANDAS DATAFRAMES")
 print("=" * 70)
 
 print("""
-PHP (Laravel)                          | Pandas (Python)
-----------------------------------------------------
-$orders = DB::table('orders')->get()  | df = pd.read_csv('orders.csv')
-count($orders)                         | len(df)
-$orders[0]->amount                    | df.iloc[0]['amount']
-foreach($orders as $order) { ... }    | for idx, row in df.iterrows(): ...
-array_map/filter                      | df[df['status'] == 'completed']
-array_sum()                            | df['amount'].sum()
-array_column()                         | df[['col1', 'col2']]
-usort()                                | df.sort_values('column')
+TASK                              | LARAVEL (PHP/Eloquent)        | PANDAS (Python)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Load data from DB                 | Order::all()                   | df = pd.read_csv(...)
+                                  | Order::get()                   |
+
+Load from CSV                     | N/A (uncommon in Laravel)     | df = pd.read_csv('file.csv')
+
+Get number of rows                | $orders->count()               | len(df)
+                                  | Order::count()                 |
+
+Access first row                  | $orders->first()               | df.iloc[0]
+                                  | $orders[0]                     | df.head(1)
+
+Access by index                   | $orders->get(0)                | df.iloc[0]
+
+Access column                     | $orders->pluck('amount')       | df['amount']
+                                  | array_column($orders, 'amount')|
+
+Get multiple columns              | $orders->select('col1','col2') | df[['col1', 'col2']]
+
+Filter rows                       | Order::where(...)->get()       | df[df['status']=='completed']
+                                  | $orders->filter(...)           |
+
+Count/Sum/Avg                     | $orders->sum('amount')         | df['amount'].sum()
+                                  | $orders->avg('amount')         | df['amount'].mean()
+                                  |                                | df['amount'].count()
+
+Sort data                         | $orders->sortBy('amount')      | df.sort_values('amount')
+                                  |                                | df.sort_values(ascending=False)
+
+Unique values                     | $orders->unique()              | df['city'].unique()
+                                  | $orders->pluck('city')->unique()| df['city'].nunique()
+
+Iterate rows                      | foreach ($orders as $order)    | for idx, row in df.iterrows():
+                                  |                                | for index, row in df.itertuples():
+
+Get statistics                    | (write custom code)            | df.describe()
+                                  |                                | df.info()
+
+Get first N rows                  | $orders->take(10)->get()       | df.head(10)
+                                  | $orders->limit(10)->get()      |
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+KEY INSIGHTS FOR LARAVEL DEVELOPERS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. DataFrames ≈ Collections from Eloquent
+   Order::all() returns a Collection (similar to DataFrame)
+
+2. Pandas is FASTER for large datasets
+   - Vectorized operations vs. Laravel loops
+   - 100x faster for millions of rows
+
+3. Pandas focuses on ANALYSIS
+   - DataFrames designed for data science
+   - Eloquent designed for web applications
+
+4. Less OOP, more functional
+   - No "models" like Eloquent
+   - Direct access to data structures
+
+5. Better for bulk operations
+   df['amount'].sum()  # Much faster than $orders->sum('amount') on large data
+
+WHEN TO USE EACH:
+✓ Laravel: Web apps, CRUD operations, real-time data
+✓ Pandas: Data analysis, reports, statistics, ML prep
 """)
 
 print("\n✅ Day 8 Complete!")
