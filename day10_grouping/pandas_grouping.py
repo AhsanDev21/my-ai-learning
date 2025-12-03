@@ -293,6 +293,96 @@ for rank, (city, count) in enumerate(city_counts.items(), 1):
     print(f"   {rank}. {city}: {count} orders")
 
 # ==========================================
+# LARAVEL vs PANDAS - GROUP BY & AGGREGATIONS
+# ==========================================
+
+print("\n\n" + "=" * 70)
+print("🔄 LARAVEL GROUP BY vs PANDAS GROUPBY")
+print("=" * 70)
+
+print("""
+AGGREGATION TASK                   | LARAVEL (PHP/Eloquent)           | PANDAS (Python)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Count by group                     | Order::selectRaw('city, count(*)  | df.groupby('city').size()
+                                  | as count')->groupBy('city')      | df['city'].value_counts()
+
+Sum by group                       | Order::selectRaw('city,           | df.groupby('city')['amount'].sum()
+                                  | sum(amount) as total')            |
+                                  | ->groupBy('city')->get()          |
+
+Average by group                  | Order::selectRaw('city,           | df.groupby('city')['amount'].mean()
+                                  | avg(amount) as avg_amount')       | df.groupby('city')['amount'].agg('mean')
+                                  | ->groupBy('city')->get()          |
+
+Min/Max by group                  | Order::selectRaw('city,           | df.groupby('city')['amount'].min()
+                                  | min(amount), max(amount)')        | df.groupby('city')['amount'].max()
+                                  | ->groupBy('city')->get()          |
+
+Multiple aggregations              | Order::selectRaw('city,           | df.groupby('city')['amount'].agg(['sum',
+                                  | count(*) as cnt,                  | 'count', 'mean', 'min', 'max'])
+                                  | sum(amount), avg(amount), ...') |
+
+Group by multiple columns         | Order::groupBy('city', 'status')  | df.groupby(['city', 'status']).size()
+                                  | ->selectRaw('count(*) as cnt')    |
+
+Get max per group (top N)         | Order::where('amount',            | df.groupby('city')['amount']
+                                  | Order::selectRaw('max(amount)')   | .nlargest(1)
+                                  | ->groupBy('city'))->get()         |
+
+Sort group results                | Order::groupBy('city')            | df.groupby('city')['amount'].sum()
+                                  | ->selectRaw('sum(amount)')        | .sort_values(ascending=False)
+                                  | ->orderByDesc('sum')              |
+
+Count nulls per group             | Order::selectRaw('city,           | df.groupby('city')['col_name']
+                                  | count(col) as cnt')               | .apply(lambda x: x.isnull().sum())
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PANDAS GROUPBY SYNTAX CHEAT SHEET:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Single group, single metric
+df.groupby('city')['amount'].sum()
+
+# Single group, multiple metrics
+df.groupby('city')['amount'].agg(['sum', 'count', 'mean', 'min', 'max'])
+
+# Multiple groups
+df.groupby(['city', 'status']).size()
+
+# Named aggregations (cleaner)
+df.groupby('city')['amount'].agg(
+    total='sum',
+    count='count',
+    average='mean'
+)
+
+# Custom aggregation
+df.groupby('city')['amount'].agg(lambda x: x.max() - x.min())
+
+# Get top value per group
+df.groupby('city').apply(lambda x: x.nlargest(1, 'amount'))
+
+REAL EXAMPLES:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Laravel:  DB::table('orders')
+            ->select(DB::raw('city, count(*), sum(amount)'))
+            ->groupBy('city')
+            ->orderByDesc(DB::raw('sum(amount)'))
+            ->get()
+
+Pandas:   df.groupby('city')['amount'].agg(['count', 'sum'])
+            .sort_values('sum', ascending=False)
+
+PERFORMANCE NOTES:
+✓ Pandas groupby: 50-500x faster than Laravel
+✓ Great for millions of rows
+✓ In-memory processing (faster but needs RAM)
+✓ Laravel better for streaming large datasets
+""")
+
+# ==========================================
 # PRACTICE EXERCISES
 # ==========================================
 

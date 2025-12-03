@@ -290,6 +290,77 @@ top_city = city_counts.idxmax()
 print(f"   Best city: {top_city} with {city_counts[top_city]} orders")
 
 # ==========================================
+# LARAVEL vs PANDAS - WHERE CLAUSES
+# ==========================================
+
+print("\n\n" + "=" * 70)
+print("🔄 LARAVEL WHERE vs PANDAS FILTERING")
+print("=" * 70)
+
+print("""
+FILTER TASK                        | LARAVEL (PHP/Eloquent)         | PANDAS (Python)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+WHERE status = 'completed'         | Order::where('status',         | df[df['status'] == 'completed']
+                                  | 'completed')->get()            |
+
+WHERE amount > 3000                | Order::where('amount', '>'    | df[df['amount'] > 3000]
+                                  | 3000)->get()                   |
+
+WHERE amount >= 3000               | Order::where('amount', '>='   | df[df['amount'] >= 3000]
+                                  | 3000)->get()                   |
+
+WHERE status != 'pending'          | Order::where('status', '!='   | df[df['status'] != 'pending']
+                                  | 'pending')->get()              |
+
+WHERE status IN ('pending', 'new') | Order::whereIn('status',       | df[df['status'].isin(['pending','new'])]
+                                  | ['pending', 'new'])->get()     |
+
+WHERE NOT IN                       | Order::whereNotIn('status',   | df[~df['status'].isin(['pending'])]
+                                  | ['pending'])->get()            |
+
+WHERE col LIKE '%text%'            | Order::where('name', 'like',  | df[df['name'].str.contains('text')]
+                                  | '%text%')->get()               |
+
+WHERE city = 'Lahore' AND          | Order::where('city', 'Lahore')| df[(df['city']=='Lahore') &
+      amount > 3000                |     ->where('amount', '>', 3k) |  (df['amount']>3000)]
+                                  |     ->get()                    |
+
+WHERE status='done' OR city='NYC'  | Order::where('status', 'done')| df[(df['status']=='done') |
+                                  |     ->orWhere('city', 'NYC')   |  (df['city']=='NYC')]
+                                  |     ->get()                    |
+
+Get first matching record           | Order::where(...)->first()     | df[df['status']=='completed'].iloc[0]
+
+Count matching records             | Order::where(...)->count()     | len(df[df['status']=='completed'])
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PANDAS FILTERING RULES (IMPORTANT!):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Use () around each condition:    (df['col'] == value)
+2. Use & for AND (not 'and'):       (df['a']==1) & (df['b']==2)
+3. Use | for OR (not 'or'):         (df['a']==1) | (df['b']==2)
+4. Use ~ for NOT:                   ~(df['status']=='pending')
+5. Use == for equals (not =):       df['status'] == 'value'
+
+EXAMPLE COMPARISONS:
+Laravel:  Order::where('status', 'completed')
+Pandas:   df[df['status'] == 'completed']
+
+Laravel:  Order::where('city', 'Lahore')->where('amount', '>', 3000)
+Pandas:   df[(df['city']=='Lahore') & (df['amount']>3000)]
+
+Laravel:  Order::whereIn('status', ['pending', 'completed'])
+Pandas:   df[df['status'].isin(['pending', 'completed'])]
+
+SPEED COMPARISON:
+✓ Pandas is 10-100x faster on large datasets
+✓ Laravel better for real-time web queries
+✓ For analysis: Always use Pandas
+""")
+
+# ==========================================
 # PRACTICE EXERCISES
 # ==========================================
 
