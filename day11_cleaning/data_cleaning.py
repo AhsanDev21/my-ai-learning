@@ -19,7 +19,7 @@ print("\n1. Creating messy/real-world data...\n")
 # Real data has problems:
 # - Missing values (NaN, blank, None)
 # - Duplicates
-# - Wrong data types
+# - Wrong data types..
 # - Inconsistent formatting
 # - Outliers
 
@@ -104,6 +104,7 @@ print("-" * 70)
 df_ffill = df_clean.copy()
 df_ffill['city'] = df_ffill['city'].fillna(method='ffill')
 print("Using forward fill:")
+
 print(df_ffill['city'])
 
 # ==========================================
@@ -132,7 +133,7 @@ print("=" * 70)
 
 df_clean = df_clean.drop_duplicates().reset_index(drop=True)
 
-print(f"\n❌ Current data types:")
+print(f"\n Current data types:")
 print(df_clean.dtypes)
 
 # Convert amount to numeric (handle conversion errors)
@@ -146,7 +147,7 @@ df_clean['latitude'] = pd.to_numeric(df_clean['latitude'], errors='coerce')
 df_clean['longitude'] = pd.to_numeric(df_clean['longitude'], errors='coerce')
 print(f"✓ Converted to float")
 
-print(f"\n✅ Updated data types:")
+print(f"\n Updated data types:")
 print(df_clean.dtypes)
 
 # ==========================================
@@ -157,7 +158,7 @@ print("\n\n" + "=" * 70)
 print("6. FIX INCONSISTENT FORMATTING")
 print("=" * 70)
 
-print(f"\n❌ Before: Cities with inconsistent case")
+print(f"\n Before: Cities with inconsistent case")
 print(df_clean['city'].unique())
 
 # Convert all city names to title case (Lahore, not lahore)
