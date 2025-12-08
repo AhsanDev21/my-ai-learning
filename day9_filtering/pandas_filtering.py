@@ -23,11 +23,12 @@ orders_data = [
     [4, "Ayesha Malik", "windshield_repair", "Lahore", 1500, "in_progress", "2024-01-22"],
     [5, "Muhammad Karim", "windshield_replacement", "Rawalpindi", 3500, "pending", "2024-01-25"],
     [6, "Sara Ahmed", "windshield_replacement", "Karachi", 3500, "completed", "2024-01-19"],
-    [7, "Usman Khan", "windshield_repair", "Islamabad", 1500, "completed", "2024-01-21"],
+    [7, "Usman Zaidi", "windshield_repair", "Islamabad", 1500, "completed", "2024-01-21"],
     [8, "Zainab Ali", "windshield_replacement", "Lahore", 3500, "pending", "2024-01-24"],
     [9, "Omar Hassan", "windshield_repair", "Rawalpindi", 1500, "in_progress", "2024-01-23"],
     [10, "Rabia Khan", "windshield_replacement", "Karachi", 3500, "completed", "2024-01-26"],
 ]
+
 
 csv_file = "orders.csv"
 with open(csv_file, 'w', newline='') as file:
