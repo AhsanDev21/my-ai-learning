@@ -27,7 +27,7 @@ orders_data = [
     [7, "Usman Khan", "windshield_repair", "Islamabad", 1500, "completed"],
     [8, "Zainab Ali", "windshield_replacement", "Lahore", 3500, "pending"],
     [9, "Omar Hassan", "windshield_repair", "Rawalpindi", 1500, "in_progress"],
-    [10, "Rabia Khan", "windshield_replacement", "Karachi", 3500, "completed"],
+    [10, "Rabia Khan", "windshield_replacement", "Karachi", 3500, "completed" ],
 ]
 
 csv_file = "orders.csv"
@@ -134,6 +134,7 @@ print(f"   {df.iloc[0]['customer_name']}")
 # ==========================================
 # 7. BASIC STATISTICS
 # ==========================================
+
 
 print("\n\n" + "=" * 70)
 print("7. BASIC STATISTICS (describe())")
